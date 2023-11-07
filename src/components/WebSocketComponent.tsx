@@ -13,7 +13,7 @@ function WebSocketComponent() {
         });
     });
 
-    let sendMessage = () => {
+    const sendMessage = () => {
         const message = {
             name: 'Your Name Here', // Replace with the desired message content
         };

@@ -1,0 +1,8 @@
+.msu-navbar {
+    background: url("/public/assets/grass.png") repeat;
+}
+
+.msu-navbar-item {
+    background-image: url("/public/assets/oak.png");
+    background-size: contain;
+}
