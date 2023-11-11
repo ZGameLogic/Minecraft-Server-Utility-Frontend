@@ -15,7 +15,7 @@ function WebSocketComponent() {
 
     const sendMessage = () => {
         const message = {
-            name: 'Your Name Here', // Replace with the desired message content
+            server: 'AMT9'
         };
 
         // Send the message to the server
