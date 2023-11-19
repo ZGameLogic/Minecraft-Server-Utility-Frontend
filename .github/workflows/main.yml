@@ -37,6 +37,6 @@ jobs:
         run: |
           cd backend
           git status
-          git add -a
+          git add -A
           git commit -m "Updating backend with new frontend UI automatically"
           git push
