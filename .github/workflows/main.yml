@@ -32,13 +32,13 @@ jobs:
           ref: development
           path: backend
       - name: Add Build to Backend
-        run: echo d | xcopy /j /y /s "frontend\build" "backend\src\resources\static"
-      - name: Commit Backend Code
-        run: |
-          cd backend
-          git config --global user.name 'zabory'
-          git config --global user.email 'benshabowski@gmail.com'
-          git remote set-url origin  https://github.com/ZGameLogic/Minecraft-Server-Utility-Backend.git 
-          git add -A
-          git commit -m "Updating backend with new frontend UI automatically"
-          git push
+        run: echo d | xcopy /j /y /s "frontend\build" "backend\src\main\resources\static"
+#      - name: Commit Backend Code
+#        run: |
+#          cd backend
+#          git config --global user.name 'zabory'
+#          git config --global user.email 'benshabowski@gmail.com'
+#          git remote set-url origin  https://github.com/ZGameLogic/Minecraft-Server-Utility-Backend.git
+#          git add -A
+#          git commit -m "Updating backend with new frontend UI automatically"
+#          git push

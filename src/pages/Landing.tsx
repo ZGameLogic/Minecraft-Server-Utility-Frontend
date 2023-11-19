@@ -1,12 +1,24 @@
-import React from 'react';
-import WebSocketComponent from '../components/WebSocketComponent';
+import React, {useEffect, useState} from 'react';
+import {fetchServers} from '../services/MSU-Backend-Service';
+import MinecraftServerCard from '../components/MinecraftServerCard';
 
 function Landing() {
 
+    const [mcServers, setMcServers] = useState([]);
+
+    useEffect(() => {
+        fetchServers().then((res) => {
+            setMcServers(res.data);
+        });
+    }, []);
+
     return(
         <>
-            <h1>Welcome!</h1>
-            <WebSocketComponent/>
+            {
+                mcServers.map(server => {
+                    return <MinecraftServerCard key={server.name} server={server}/>;
+                })
+            }
         </>
     );
 }

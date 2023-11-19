@@ -1,0 +1,26 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import {Card} from 'react-bootstrap';
+
+function MinecraftServerCard(props){
+    const {server} = props;
+    return <>
+        <Card border="secondary" style={{ width: '18rem' }}>
+            <Card.Header>{server.name}</Card.Header>
+            <Card.Body>
+                <Card.Title>{server.status}</Card.Title>
+                <Card.Text></Card.Text>
+            </Card.Body>
+        </Card>
+        <br />
+    </>;
+}
+
+MinecraftServerCard.propTypes = {
+    server: PropTypes.shape({
+        name: PropTypes.string,
+        status: PropTypes.string
+    })
+};
+
+export default MinecraftServerCard;
