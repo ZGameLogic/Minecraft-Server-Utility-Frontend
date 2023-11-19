@@ -28,7 +28,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with: 
-          repository: ZGameLogic/Minecraft-Server-Utility-Frontend
+          repository: ZGameLogic/Minecraft-Server-Utility-Backend
+          ref: development
           path: backend
       - name: Add Build to Backend
         run: echo hello world
