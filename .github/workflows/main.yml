@@ -42,7 +42,6 @@ jobs:
           git commit -m "Updating backend with new frontend UI automatically"
           git push
       - name: Push Changes
-        working-directory: ./backend
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT_TOKEN }}
