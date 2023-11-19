@@ -2,7 +2,7 @@ name: Deploy Frontend to Backend Prod
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   Build:
