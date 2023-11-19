@@ -1,0 +1,36 @@
+name: Deploy Frontend to Backend Prod
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  Build:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Packages
+        run: npm i
+      - name: Build website
+        run: npm run build
+        
+  Pull-request-into-backend:
+    runs-on: self-hosted
+    needs: Build
+    steps:
+      - name: Checkout Backend
+        run: echo step
+      - name: Add Files to Backend
+        run: echo step
+      - name: Commit Files to Backend
+        run: echo step
+      - name: Push Files to Backend
+        run: echo step
+      - name: Create Pull Request
+        run: echo step
+      - name: Merge Pull Request
+        run: echo step
+      - name: Clean Up Files
+        run: echo step
+        
