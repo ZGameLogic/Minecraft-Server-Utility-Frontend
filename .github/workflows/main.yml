@@ -13,9 +13,13 @@ jobs:
         with: 
           path: frontend
       - name: Install Packages
-        run: npm i
+        run: |
+          cd frontend
+          npm i
       - name: Build website
-        run: npm run build
+        run: |
+          cd frontend
+          npm run build
         
   Pull-request-into-backend:
     runs-on: self-hosted
