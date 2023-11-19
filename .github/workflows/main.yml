@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with: 
+          path: frontend
       - name: Install Packages
         run: npm i
       - name: Build website
@@ -19,18 +21,10 @@ jobs:
     runs-on: self-hosted
     needs: Build
     steps:
-      - name: Checkout Backend
-        run: echo step
-      - name: Add Files to Backend
-        run: echo step
-      - name: Commit Files to Backend
-        run: echo step
-      - name: Push Files to Backend
-        run: echo step
-      - name: Create Pull Request
-        run: echo step
-      - name: Merge Pull Request
-        run: echo step
-      - name: Clean Up Files
-        run: echo step
-        
+      - name: Checkout
+        uses: actions/checkout@v3
+        with: 
+          repository: zgamelogic/Minecraft-Server-Utility-Backend
+          path: backend
+      - name: Add Build to Backend
+        run: echo hello world
