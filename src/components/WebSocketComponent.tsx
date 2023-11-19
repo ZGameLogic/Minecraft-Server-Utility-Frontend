@@ -18,7 +18,6 @@ function WebSocketComponent() {
             server: 'AMT9'
         };
 
-        // Send the message to the server
         stompClient.send('/app/hello', {}, JSON.stringify(message));
     };
 
