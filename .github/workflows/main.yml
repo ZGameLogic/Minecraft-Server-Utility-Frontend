@@ -40,7 +40,6 @@ jobs:
           git config --global user.email 'benshabowski@gmail.com'
           git add -A
           git commit -m "Updating backend with new frontend UI automatically"
-          git push
       - name: Push Changes
         uses: ad-m/github-push-action@master
         with:
