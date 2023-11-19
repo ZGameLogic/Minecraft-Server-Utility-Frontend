@@ -32,7 +32,7 @@ jobs:
           ref: development
           path: backend
       - name: Add Build to Backend
-        run: echo d | xcopy /j /y /s "frontend/build" "backend/src/resources/static"
+        run: echo d | xcopy /j /y /s "frontend\build" "backend\src\resources\static"
       - name: Commit Backend Code
         run: |
           cd backend
