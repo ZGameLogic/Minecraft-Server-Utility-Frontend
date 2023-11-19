@@ -32,4 +32,10 @@ jobs:
           ref: development
           path: backend
       - name: Add Build to Backend
-        run: echo hello world
+        run: echo d | xcopy /j /y /s "frontend/build" "backend/src/resources/static"
+      - name: Commit Backend Code
+        run: |
+          cd backend
+          git status
+          git commit -a -m "Updating backend with new frontend UI automatically"
+          git push
