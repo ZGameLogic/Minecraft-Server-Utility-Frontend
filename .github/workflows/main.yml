@@ -36,7 +36,8 @@ jobs:
       - name: Commit Backend Code
         run: |
           cd backend
-          git config --global user.name 'Automation'
-          git config --global user.email 'benshabowski@gmail.com'
+          git remote set-url origin git@github.com:ZGameLogic/Minecraft-Server-Utility-Backend.git 
           git add -A
           git commit -m "Updating backend with new frontend UI automatically"
+          ssh-add C:/Users/Ben/.ssh/id_ed
+          git push
