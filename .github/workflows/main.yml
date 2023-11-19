@@ -36,7 +36,14 @@ jobs:
       - name: Commit Backend Code
         run: |
           cd backend
-          git status
+          git config --global user.name 'Automation'
+          git config --global user.email 'benshabowski@gmail.com'
           git add -A
           git commit -m "Updating backend with new frontend UI automatically"
           git push
+      - name: Push Changes
+        working-directory: ./backend
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT_TOKEN }}
+          repository: ZGameLogic/Minecraft-Server-Utility-Backend
