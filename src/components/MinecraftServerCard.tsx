@@ -9,7 +9,7 @@ function MinecraftServerCard(props){
             <Card.Header>{server.name}</Card.Header>
             <Card.Body>
                 <Card.Title>{server.status}</Card.Title>
-                <Card.Text></Card.Text>
+                <Card.Text>{server.playersOnline}</Card.Text>
             </Card.Body>
         </Card>
         <br />
@@ -19,7 +19,9 @@ function MinecraftServerCard(props){
 MinecraftServerCard.propTypes = {
     server: PropTypes.shape({
         name: PropTypes.string,
-        status: PropTypes.string
+        status: PropTypes.string,
+        online: PropTypes.arrayOf(PropTypes.string),
+        playersOnline: PropTypes.number
     })
 };
 
