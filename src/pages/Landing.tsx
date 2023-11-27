@@ -7,8 +7,11 @@ function Landing() {
     const [mcServers, setMcServers] = useState([]);
 
     useEffect(() => {
+        console.log(process.env.REACT_APP_BACKEND_API_URL);
         fetchServers().then((res) => {
             setMcServers(res.data);
+        }).catch((err) => {
+            console.log(err);
         });
     }, []);
 

@@ -12,6 +12,7 @@
     "@types/react-dom": "^18.2.7",
     "axios": "^1.5.0",
     "bootstrap": "^5.3.2",
+    "env-cmd": "^10.1.0",
     "net": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
@@ -26,9 +27,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "env-cmd -f .env.local react-scripts start",
     "lint": "npx eslint src",
-    "build": "react-scripts build",
+    "build": "env-cmd -f .env.production react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
