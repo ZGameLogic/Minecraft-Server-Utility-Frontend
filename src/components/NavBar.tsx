@@ -18,6 +18,7 @@ function NavScrollExample() {
                         navbarScroll
                     >
                         <Nav.Link href="/">Home</Nav.Link>
+                        <Nav.Link href="/create">Create Server</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>

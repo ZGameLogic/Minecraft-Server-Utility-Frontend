@@ -9,7 +9,10 @@ function MinecraftServerCard(props){
             <Card.Header>{server.name}</Card.Header>
             <Card.Body>
                 <Card.Title>{server.status}</Card.Title>
-                <Card.Text>{server.playersOnline}</Card.Text>
+                <Card.Text>
+                    <p>{server.playersOnline}</p>
+                    <p>{server.online}</p>
+                </Card.Text>
             </Card.Body>
         </Card>
         <br />
