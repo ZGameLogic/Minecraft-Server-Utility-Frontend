@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {fetchServers} from '../services/MSU-Backend-Service';
 import MinecraftServerCard from '../components/MinecraftServerCard';
 
-function Landing() {
+function LandingPage() {
 
     const [mcServers, setMcServers] = useState([]);
 
@@ -14,15 +14,13 @@ function Landing() {
         });
     }, []);
 
-    return(
-        <>
-            {
-                mcServers.map(server => {
-                    return <MinecraftServerCard key={server.name} server={server}/>;
-                })
-            }
-        </>
-    );
+    return <>
+        {
+            mcServers.map(server => {
+                return <MinecraftServerCard key={server.name} server={server}/>;
+            })
+        }
+    </>;
 }
 
-export default Landing;
+export default LandingPage;

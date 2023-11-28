@@ -5,7 +5,7 @@ import {Button, Card, Col, Row} from 'react-bootstrap';
 import * as yup from 'yup';
 import {Formik} from 'formik';
 
-function CreateServer() {
+function CreateServerPage() {
 
     const [serverVersionsApiData, setServerVersionsApiData] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -210,4 +210,4 @@ function CreateServer() {
         </Card>;
 }
 
-export default CreateServer;
+export default CreateServerPage;
