@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
+import Form from 'react-bootstrap/Form';
 import {fetchServerVersions} from '../services/MSU-Backend-Service';
-import {Card} from 'react-bootstrap';
+import {Card, Col, Row} from 'react-bootstrap';
 
 function CreateServer() {
 
@@ -14,14 +15,16 @@ function CreateServer() {
     useEffect(() => {
         fetchServerVersions().then(res => {
             const {data} = res;
+            const cat = Object.keys(data)[0];
+
             setServerVersionsApiData(data);
-            setSelectedCategory(Object.keys(data)[0]);
-            setSelectedCategoryVersions(data[Object.keys(data)[0]].sort(sortMCVersion));
-            setSelectedVersion(data[Object.keys(data)[0]].sort(sortMCVersion)[0]);
+            setSelectedCategory(cat);
+            setSelectedCategoryVersions(data[cat].sort(sortMCVersion));
+            setSelectedVersion(data[cat].sort(sortMCVersion)[0]);
         });
     }, []);
 
-    function sortMCVersion(a, b){
+    function sortMCVersion(a: string, b: string){
         const aSplit = a.split('.');
         const aRelease = parseInt(aSplit[0], 10);
         const aUpdate = parseInt(aSplit[1], 10) ?? 0;
@@ -39,13 +42,45 @@ function CreateServer() {
             : aRelease < bRelease;
     }
 
+    function updateVersion(event){
+        console.log(event);
+    }    
+    
+    function updateCategory(event){
+        setSelectedCategory(event.target.value);
+        console.log('versions', serverVersionsApiData[event.target.value].sort(sortMCVersion));
+        setSelectedCategoryVersions(serverVersionsApiData[event.target.value].sort(sortMCVersion));
+    }
+
     return(<>
-        <Card border="secondary" style={{ width: '33rem' }}>
+        <Card border='secondary' style={{ width: '50rem' }}>
             <Card.Body>
                 <Card.Title>Create Server</Card.Title>
                 <Card.Text>
-                    <p>{selectedCategory}</p>
-                    <p>{selectedVersion}</p>
+                    <Form>
+                        <Form.Group className='mb-3' controlId='formServerName'>
+                            <Form.Label>Server name</Form.Label>
+                            <Form.Control placeholder="ATM9" />
+                        </Form.Group>
+                        <Row className='mb-3'>
+                            <Form.Group as={Col} controlId='formServerCategory'>
+                                <Form.Label>Category</Form.Label>
+                                <Form.Select defaultValue={selectedCategory} onChange={updateCategory}>
+                                    {Object.keys(serverVersionsApiData).map((cat) => {
+                                        return <option key={cat}>{cat}</option>;
+                                    })}
+                                </Form.Select>
+                            </Form.Group>
+                            <Form.Group as={Col} controlId='formServerVersion'>
+                                <Form.Label>Version</Form.Label>
+                                <Form.Select defaultValue={selectedVersion} onChange={updateVersion}>
+                                    {selectedCategoryVersions.map((ver) => {
+                                        return <option key={ver}>{ver}</option>;
+                                    })}
+                                </Form.Select>
+                            </Form.Group>
+                        </Row>
+                    </Form>
                 </Card.Text>
             </Card.Body>
         </Card>
