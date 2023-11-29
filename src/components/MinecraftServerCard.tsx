@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card} from 'react-bootstrap';
+import '../style/server-card.css';
 
 function MinecraftServerCard(props){
     const {server} = props;
     return <>
         <Card
-            className="text-center"
+            className="text-center msu-server-card"
             bg="dark"
             text="white"
             border="success"

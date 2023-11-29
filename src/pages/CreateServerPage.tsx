@@ -90,7 +90,7 @@ function CreateServerPage() {
                         port: 25565,
                         startCommand: 'java -jar server.jar nogui',
                         category: selectedCategory,
-                        version: selectedCategoryVersions[0],
+                        version: '1.20.2',
                         updateScript: '',
                         autoStart: false,
                         autoUpdate: false

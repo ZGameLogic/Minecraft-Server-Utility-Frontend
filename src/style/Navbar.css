@@ -5,4 +5,6 @@
 .msu-navbar-item {
     background-image: url("/public/assets/oak.png");
     background-size: contain;
+    margin-right: 5px;
+    color: black;
 }

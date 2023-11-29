@@ -13,12 +13,12 @@ function NavScrollExample() {
                 <Navbar.Toggle aria-controls="navbarScroll"/>
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
-                        className="msu-navbar-item me-auto my-2 my-lg-0"
+                        className="me-auto my-2 my-lg-0"
                         style={{maxHeight: '100px'}}
                         navbarScroll
                     >
-                        <Nav.Link href="/">Home</Nav.Link>
-                        <Nav.Link href="/create">Create Server</Nav.Link>
+                        <Nav.Link href="/" className="msu-navbar-item">Home</Nav.Link>
+                        <Nav.Link href="/create" className="msu-navbar-item">Create Server</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
