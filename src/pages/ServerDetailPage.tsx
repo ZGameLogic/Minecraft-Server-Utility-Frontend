@@ -7,13 +7,15 @@ import {fetchServer, fetchServerLog} from '../services/MSU-Backend-Service';
 
 function ServerDetailPage() {
     const {server} = useParams();
-    const socket = new SockJS(`${process.env.REACT_APP_BACKEND_API_URL}/ws`);
-    const stompClient = Stomp.over(socket);
 
     const [status, setStatus] = useState('Unknown');
     const [log, setLog] = useState([]);
+    const [stompClient, setStompClient] = useState<Stomp.Client>();
 
     useEffect(() => {
+        const socket = new SockJS(`${process.env.REACT_APP_BACKEND_API_URL}/ws`);
+        const stompClient = Stomp.over(socket);
+        setStompClient(stompClient);
         fetchServer(server).then((res) => {
             const {status} = res.data[0] ?? 'Unknown';
             setStatus(status);
@@ -81,11 +83,11 @@ function ServerDetailPage() {
         >
             <Tab eventKey="log" title="Server Log">
                 <Table striped bordered hover variant="dark">
-                    <tbody>
-                    {log.map(line => {
+                    <tbody key="server-log">
+                    {log.map((line, index) => {
                         return <>
-                            <tr key={line}>
-                                <td>{line}</td>
+                            <tr key={index}>
+                                <td key={index + 'line'}>{line}</td>
                             </tr>
                         </>;
                     })}

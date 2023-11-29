@@ -90,7 +90,7 @@ function CreateServerPage() {
                         port: 25565,
                         startCommand: 'java -jar server.jar nogui',
                         category: selectedCategory,
-                        version: selectedCategory === 'vanilla' ? serverVersionsApiData[selectedCategory].sort(sortMCVersion)[0] : serverVersionsApiData[selectedCategory][0],
+                        version: selectedCategoryVersions[0],
                         updateScript: '',
                         autoStart: false,
                         autoUpdate: false
