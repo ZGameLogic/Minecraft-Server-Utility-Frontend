@@ -1,39 +1,101 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import {Tab, Table, Tabs} from 'react-bootstrap';
+import {fetchServer, fetchServerLog} from '../services/MSU-Backend-Service';
 
 function ServerDetailPage() {
     const {server} = useParams();
     const socket = new SockJS(`${process.env.REACT_APP_BACKEND_API_URL}/ws`);
     const stompClient = Stomp.over(socket);
 
-    const [message, setMessage] = useState('Waiting for a message');
+    const [status, setStatus] = useState('Unknown');
+    const [log, setLog] = useState([]);
 
-    stompClient.connect({}, () => {
-        // stompClient.subscribe(`/app/server/${server}`, (message) => {
-        stompClient.subscribe('/**', (message) => {
-            console.log(message);
-            setMessage(message);
+    useEffect(() => {
+        fetchServer(server).then((res) => {
+            const {status} = res.data[0] ?? 'Unknown';
+            setStatus(status);
+        }).catch((err) => {
+            console.log(err);
         });
-    }, (error) => {
-        console.error('Stomp connection error:', error);
-    });
+        fetchServerLog(server).then((res) => {
+            const log = res.data[server].log ?? '';
+            log.split('\r\n').map(addToLog);
+        }).catch((err) => {
+            console.log(err);
+        });
+        stompClient.connect({}, () => {
+            stompClient.subscribe(`/server/${server}`, (message) => {
+                const body = JSON.parse(message.body);
+                if(body.messageType === 'status'){
+                    setStatus(body.message);
+                } else if(body.messageType === 'log') {
+                    addToLog(body.message);
+                }
+            });
+        }, (error) => {
+            console.error('Stomp connection error:', error);
+        });
+    }, []);
+
+    useEffect(() => {
+        if(status === 'Starting'){
+            setLog([]);
+        }
+    }, [status]);
 
     function sendMessage(message: object){
         stompClient.send(`/app/server/${server}`, {}, JSON.stringify(message));
     }
 
+    function stopServer(){
+        sendMessage({
+            action: 'stop'
+        });
+    }
+
+    function startServer(){
+        sendMessage({
+            action: 'start'
+        });
+    }
+    
+    function addToLog(message: string){
+        setLog((prevState) => {
+            prevState.push(message);
+            return prevState;
+        });
+    }
+
     return <>
-        {server}
-        <button onClick={() => {
-            console.log('Stomp connection state:', stompClient.connected);
-            sendMessage({
-                action: 'none',
-                data: {}
-            });
-        }}>Test</button>
-        <p>{message}</p>
+        <p>{server} {status} </p>
+        <button onClick={stopServer}>Stop Server</button>
+        <button onClick={startServer}>Start Server</button>
+        <Tabs
+            defaultActiveKey="log"
+            id="uncontrolled-tab-example"
+            className="mb-3"
+            justify
+        >
+            <Tab eventKey="log" title="Server Log">
+                <Table striped bordered hover variant="dark">
+                    <tbody>
+                    {log.map(line => {
+                        return <>
+                            <tr key={line}>
+                                <td>{line}</td>
+                            </tr>
+                        </>;
+                    })}
+                    </tbody>
+                </Table>
+            </Tab>
+            <Tab eventKey="chat" title="Chat Log">
+                Tab content for Profile
+            </Tab>
+        </Tabs>
     </>;
 }
 

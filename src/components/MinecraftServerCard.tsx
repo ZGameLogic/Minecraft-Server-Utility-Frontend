@@ -1,11 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card} from 'react-bootstrap';
+import {Button, Card} from 'react-bootstrap';
 
 function MinecraftServerCard(props){
     const {server} = props;
     return <>
-        <Card border="secondary" style={{ width: '18rem' }}>
+        <Card
+            className="text-center"
+            bg="dark"
+            text="white"
+            border="success"
+            style={{ width: '18rem' }}
+        >
             <Card.Header>{server.name}</Card.Header>
             <Card.Body>
                 <Card.Title>{server.status}</Card.Title>
@@ -13,6 +19,7 @@ function MinecraftServerCard(props){
                     {server.playersOnline}
                     {server.online}
                 </Card.Text>
+                <Button variant="success" href={`/view/${server.name}`}>Detail View</Button>
             </Card.Body>
         </Card>
         <br />
