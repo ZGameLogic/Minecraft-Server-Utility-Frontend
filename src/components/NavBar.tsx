@@ -4,12 +4,13 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import '../style/Navbar.css';
+import {LinkContainer} from 'react-router-bootstrap';
 
 function NavScrollExample() {
     return (
         <Navbar bg="dark" data-bs-theme="dark" sticky="top" expand="lg" className="bg-body-tertiary msu-navbar">
             <Container fluid>
-                <Navbar.Brand href="/">Minecraft Server Utility</Navbar.Brand>
+                <Navbar.Brand>Minecraft Server Utility</Navbar.Brand>
                 <Navbar.Toggle aria-controls="navbarScroll"/>
                 <Navbar.Collapse id="navbarScroll">
                     <Nav
@@ -17,8 +18,12 @@ function NavScrollExample() {
                         style={{maxHeight: '100px'}}
                         navbarScroll
                     >
-                        <Nav.Link href="/" className="msu-navbar-item">Home</Nav.Link>
-                        <Nav.Link href="/create" className="msu-navbar-item">Create Server</Nav.Link>
+                        <LinkContainer to='/'>
+                            <Nav.Link className="msu-navbar-item">Home</Nav.Link>
+                        </LinkContainer>
+                        <LinkContainer to='/create'>
+                            <Nav.Link className="msu-navbar-item">Create Server</Nav.Link>
+                        </LinkContainer>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
