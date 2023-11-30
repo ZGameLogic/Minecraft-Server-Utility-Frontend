@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card} from 'react-bootstrap';
 import '../style/server-card.css';
+import {LinkContainer} from 'react-router-bootstrap';
 
 function MinecraftServerCard(props){
     const {server} = props;
@@ -20,7 +21,9 @@ function MinecraftServerCard(props){
                     {server.playersOnline}
                     {server.online}
                 </Card.Text>
-                <Button variant="success" href={`/view/${server.name}`}>Detail View</Button>
+                <LinkContainer to={`/view/${server.name}`}>
+                    <Button variant="success">Detail View</Button>
+                </LinkContainer>
             </Card.Body>
         </Card>
         <br />
