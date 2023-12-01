@@ -1,11 +1,25 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import {Button, Card} from 'react-bootstrap';
 import '../style/server-card.css';
 import {LinkContainer} from 'react-router-bootstrap';
+import Stomp from 'stompjs';
+import {useWebSocket} from '../hooks/WebSocketContext';
 
 function MinecraftServerCard(props){
     const {server} = props;
+    const webSocket:Stomp.Client = useWebSocket();
+
+    useEffect(() => {
+        webSocket?.subscribe(`/server/${server.name}`, () => {
+
+        });
+
+        return () => {
+            webSocket?.unsubscribe(`/server/${server.name}`);
+        };
+    }, [webSocket]);
+
     return <>
         <Card
             className="text-center msu-server-card"
