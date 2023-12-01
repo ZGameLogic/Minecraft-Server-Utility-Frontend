@@ -4,8 +4,11 @@ import {createServer, fetchServerVersions, validateServerCreation} from '../serv
 import {Button, Card, Col, Row} from 'react-bootstrap';
 import * as yup from 'yup';
 import {Formik} from 'formik';
+import {useNavigate} from 'react-router-dom';
 
 function CreateServerPage() {
+
+    const navigate = useNavigate();
 
     const [serverVersionsApiData, setServerVersionsApiData] = useState({});
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -61,7 +64,9 @@ function CreateServerPage() {
         validateServerCreation(values).then(() => {
             setServerValid(true);
             setServerValidationLoading(false);
-            createServer(values);
+            createServer(values).then(()=> {
+                navigate(`/view/${values.name}`);
+            });
         }).catch(reason => {
             const conflictData = reason.response.data.data;
             setErrors(conflictData);

@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import {Button, Card} from 'react-bootstrap';
+import {Button, ButtonGroup, Card, Stack} from 'react-bootstrap';
 import '../style/server-card.css';
 import {LinkContainer} from 'react-router-bootstrap';
 import Stomp from 'stompjs';
@@ -8,17 +8,41 @@ import {useWebSocket} from '../hooks/WebSocketContext';
 
 function MinecraftServerCard(props){
     const {server} = props;
+
+    const [status, setStatus] = useState('Unknown');
     const webSocket:Stomp.Client = useWebSocket();
 
     useEffect(() => {
-        webSocket?.subscribe(`/server/${server.name}`, () => {
-
+        setStatus(server.status);
+        webSocket?.subscribe(`/server/${server.name}`, (message) => {
+            const body = JSON.parse(message.body);
+            if(body.server === server.name) {
+                if (body.messageType === 'status') {
+                    setStatus(body.message);
+                }
+            }
         });
 
         return () => {
             webSocket?.unsubscribe(`/server/${server.name}`);
         };
     }, [webSocket]);
+
+    function sendMessage(message: object){
+        webSocket?.send(`/app/server/${server.name}`, {}, JSON.stringify(message));
+    }
+
+    function stopServer(){
+        sendMessage({
+            action: 'stop'
+        });
+    }
+
+    function startServer(){
+        sendMessage({
+            action: 'start'
+        });
+    }
 
     return <>
         <Card
@@ -30,14 +54,28 @@ function MinecraftServerCard(props){
         >
             <Card.Header>{server.name}</Card.Header>
             <Card.Body>
-                <Card.Title>{server.status}</Card.Title>
-                <Card.Text>
-                    {server.playersOnline}
-                    {server.online}
-                </Card.Text>
-                <LinkContainer to={`/view/${server.name}`}>
-                    <Button variant="success">Detail View</Button>
-                </LinkContainer>
+                <Card.Title>{status}</Card.Title>
+                <Stack gap={3}>
+                    <Card.Text>
+                        {server.playersOnline}
+                        {server.online}
+                    </Card.Text>
+                    <ButtonGroup>
+                        <Button
+                            variant="success"
+                            onClick={startServer}
+                            disabled={status !== 'Offline' && status !== 'Crashed'}
+                        >Start</Button>
+                        <Button
+                            variant="danger"
+                            onClick={stopServer}
+                            disabled={status !== 'Online'}
+                        >Stop</Button>
+                    </ButtonGroup>
+                    <LinkContainer to={`/view/${server.name}`}>
+                        <Button variant="success">Detail View</Button>
+                    </LinkContainer>
+                </Stack>
             </Card.Body>
         </Card>
         <br />
