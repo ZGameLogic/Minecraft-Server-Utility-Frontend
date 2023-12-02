@@ -4,15 +4,14 @@ import {createServer, fetchServerVersions, validateServerCreation} from '../serv
 import {Button, Card, Col, Placeholder, Row, Toast, ToastContainer} from 'react-bootstrap';
 import * as yup from 'yup';
 import {Formik} from 'formik';
-import {useNavigate} from 'react-router-dom';
+// import {useNavigate} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import '../style/create-server.css';
 
 function CreateServerForm() {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const [serverVersionsApiData, setServerVersionsApiData] = useState({});
-    const [selectedCategory, setSelectedCategory] = useState('');
     const [selectedCategoryVersions, setSelectedCategoryVersions] = useState([]);
 
     const [apiDataLoaded, setApiDataLoaded] = useState(false);
@@ -27,7 +26,6 @@ function CreateServerForm() {
             const cat = 'vanilla';
 
             setServerVersionsApiData(data);
-            setSelectedCategory(cat);
             setSelectedCategoryVersions(data[cat].sort(sortMCVersion));
             setApiDataLoaded(true);
         }, (error) => {
@@ -56,7 +54,6 @@ function CreateServerForm() {
 
     function updateCategory(event, setFieldValue){
         const {value} = event.target;
-        setSelectedCategory(value);
         setSelectedCategoryVersions(
             value === 'vanilla' ? serverVersionsApiData[value].sort(sortMCVersion) : serverVersionsApiData[value]
         );
@@ -70,7 +67,7 @@ function CreateServerForm() {
             setServerValid(true);
             setServerValidationLoading(false);
             createServer(values).then(()=> {
-                navigate(`/view/${values.name}`);
+                // navigate(`/view/${values.name}`);
             });
         }).catch(reason => {
             const conflictData = reason.response.data.data;
@@ -113,7 +110,7 @@ function CreateServerForm() {
                             name: '',
                             port: 25565,
                             startCommand: 'java -jar server.jar nogui',
-                            category: selectedCategory,
+                            category: 'vanilla',
                             version: '1.20.2',
                             updateScript: '',
                             autoStart: false,
