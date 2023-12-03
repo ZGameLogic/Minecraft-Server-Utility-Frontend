@@ -4,12 +4,14 @@ import {createServer, fetchServerVersions, validateServerCreation} from '../serv
 import {Button, Card, Col, Placeholder, Row, Toast, ToastContainer} from 'react-bootstrap';
 import * as yup from 'yup';
 import {Formik} from 'formik';
-// import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import '../style/create-server.css';
+import Stomp from 'stompjs';
+import {useWebSocket} from '../hooks/WebSocketContext';
 
 function CreateServerForm() {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const [serverVersionsApiData, setServerVersionsApiData] = useState({});
     const [selectedCategoryVersions, setSelectedCategoryVersions] = useState([]);
@@ -19,6 +21,8 @@ function CreateServerForm() {
     const [serverValidationLoading, setServerValidationLoading] = useState(false);
     const [serverValid, setServerValid] = useState(false);
     const [showError, setShowError] = useState(false);
+
+    const webSocket:Stomp.Client = useWebSocket();
 
     useEffect(() => {
         fetchServerVersions().then(res => {
@@ -67,7 +71,18 @@ function CreateServerForm() {
             setServerValid(true);
             setServerValidationLoading(false);
             createServer(values).then(()=> {
-                // navigate(`/view/${values.name}`);
+                webSocket?.subscribe(`/server/${values.name}`, (message) => {
+                    const body = JSON.parse(message.body);
+                    if(body.server === values.name) {
+                        if (body.messageType === 'install') {
+                            console.log(body);
+                            if(body.message === 'Installed'){
+                                webSocket?.unsubscribe(`/server/${values.name}`);
+                                navigate(`/view/${values.name}`);
+                            }
+                        }
+                    }
+                });
             });
         }).catch(reason => {
             const conflictData = reason.response.data.data;
