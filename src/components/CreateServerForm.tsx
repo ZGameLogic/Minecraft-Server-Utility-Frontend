@@ -101,8 +101,7 @@ function CreateServerForm() {
             .min(25500, 'Must be bigger than 25000')
             .max(29999, 'Must be smaller than 29999')
             .required('Server port is required'),
-        startCommand: yup.string().required('Start command is required'),
-        updateScript: yup.string().required('Update script is required')
+        startCommand: yup.string().required('Start command is required')
     });
 
     return <>
@@ -127,7 +126,6 @@ function CreateServerForm() {
                             startCommand: 'java -jar server.jar nogui',
                             category: 'vanilla',
                             version: '1.20.2',
-                            updateScript: '',
                             autoStart: false,
                             autoUpdate: false
                         }}
@@ -229,20 +227,6 @@ function CreateServerForm() {
                                 />
                                 <Form.Control.Feedback type="invalid">
                                     <>{errors.startCommand}</>
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                            <Form.Group as={Col} controlId="serverUpdateScript">
-                                <Form.Label>Update script</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    name="updateScript"
-                                    value={values.updateScript}
-                                    onChange={handleChange}
-                                    isInvalid={!!errors.updateScript}
-                                    disabled={!apiDataLoaded}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    <>{errors.updateScript}</>
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Button

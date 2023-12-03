@@ -1,27 +1,30 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Tab, Table, Tabs} from 'react-bootstrap';
+import {InputGroup, ListGroup, Tab, Tabs} from 'react-bootstrap';
 import {fetchServer, fetchServerLog} from '../services/MSU-Backend-Service';
 import {useWebSocket} from '../hooks/WebSocketContext';
 import Stomp from 'stompjs';
+import Container from 'react-bootstrap/Container';
 
 function ServerDetailPage() {
     const {server} = useParams();
 
     const [status, setStatus] = useState('Unknown');
     const [log, setLog] = useState([]);
+    const [autoScroll, setAutoScroll] = useState(true);
     const stompClient:Stomp.Client = useWebSocket();
+    const containerRef = useRef();
 
     useEffect(() => {
         fetchServer(server).then((res) => {
             const {status} = res.data[0] ?? 'Unknown';
             setStatus(status);
-        }).catch((err) => {
-            console.log(err);
-        });
-        if(status === 'Online') fetchServerLog(server).then((res) => {
-            const log = res.data[server].log ?? '';
-            log.split('\r\n').map(addToLog);
+            if(status === 'Online') fetchServerLog(server).then((res) => {
+                const log = res.data[server].log ?? '';
+                log.split('\r\n').map(addToLog);
+            }).catch((err) => {
+                console.log(err);
+            });
         }).catch((err) => {
             console.log(err);
         });
@@ -32,8 +35,13 @@ function ServerDetailPage() {
             const body = JSON.parse(message.body);
             if(body.messageType === 'status'){
                 setStatus(body.message);
+                if(body.message === 'Starting'){
+                    setLog([]);
+                }
             } else if(body.messageType === 'log') {
                 addToLog(body.message);
+            } else {
+                console.log(message.body);
             }
         });
 
@@ -43,10 +51,12 @@ function ServerDetailPage() {
     }, [stompClient]);
 
     useEffect(() => {
-        if(status === 'Starting'){
-            setLog([]);
+        if (autoScroll && containerRef.current) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-    }, [status]);
+    }, [log, autoScroll]);
 
     function sendMessage(message: object){
         stompClient?.send(`/app/server/${server}`, {}, JSON.stringify(message));
@@ -66,8 +76,7 @@ function ServerDetailPage() {
     
     function addToLog(message: string){
         setLog((prevState) => {
-            prevState.push(message);
-            return prevState;
+            return [...prevState, message];
         });
     }
 
@@ -75,29 +84,43 @@ function ServerDetailPage() {
         <p>{server} {status} </p>
         <button onClick={stopServer}>Stop Server</button>
         <button onClick={startServer}>Start Server</button>
-        <Tabs
-            defaultActiveKey="log"
-            id="uncontrolled-tab-example"
-            className="mb-3"
-            justify
-        >
-            <Tab eventKey="log" title="Server Log">
-                <Table striped bordered hover variant="dark">
-                    <tbody key="server-log">
-                    {log.map((line, index) => {
-                        return <>
-                            <tr key={index}>
-                                <td key={index + 'line'}>{line}</td>
-                            </tr>
-                        </>;
-                    })}
-                    </tbody>
-                </Table>
-            </Tab>
-            <Tab eventKey="chat" title="Chat Log">
-                Tab content for Profile
-            </Tab>
-        </Tabs>
+        <Container>
+            <Tabs
+                defaultActiveKey="log"
+                id="uncontrolled-tab-example"
+                className="mb-3"
+                justify
+            >
+                <Tab eventKey="log" title="Server Log">
+                    <ListGroup horizontal>
+                        <ListGroup.Item>
+                            <InputGroup.Text id="auto-scroll-checkbox">Auto Scroll</InputGroup.Text>
+                        </ListGroup.Item>
+                        <ListGroup.Item>
+                            <InputGroup.Checkbox
+                                checked={autoScroll}
+                                onChange={() => setAutoScroll(!autoScroll)}
+                            />
+                        </ListGroup.Item>
+                    </ListGroup>
+                    <div
+                        ref={containerRef}
+                        style={{
+                        maxHeight: '400px', // Set your desired maximum height here
+                        overflowY: 'auto',
+                        border: '1px solid #ccc',
+                        padding: '10px',
+                    }}>
+                        {log.map((message, index) => (
+                            <div key={index}>{message}</div>
+                        ))}
+                    </div>
+                </Tab>
+                <Tab eventKey="chat" title="Chat Log" disabled={true}>
+                    Tab content for Profile
+                </Tab>
+            </Tabs>
+        </Container>
     </>;
 }
 
