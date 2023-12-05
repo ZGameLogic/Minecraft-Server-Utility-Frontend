@@ -14,7 +14,7 @@ jobs:
         run: npm i
   Deploy:
     runs-on: self-hosted
-    needs: Deploy
+    needs: Build
     steps:
       - name: Deploy website
         run: npm run build
