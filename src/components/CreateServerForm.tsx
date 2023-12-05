@@ -125,7 +125,6 @@ function CreateServerForm() {
                             port: 25565,
                             startCommand: 'java -jar server.jar nogui',
                             category: 'vanilla',
-                            version: '1.20.2',
                             autoStart: false,
                             autoUpdate: false
                         }}
