@@ -1,3 +1,31 @@
 .msu-server-card {
     margin: 5px;
 }
+
+.dot {
+    height: 15px;
+    width: 15px;
+    margin-left: 5px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot.Offline {
+    background-color: #bbb;
+}
+
+.dot.Online {
+    background-color: #00bb00;
+}
+
+.dot.Starting, .dot.Stopping {
+    background-color: #bbab00;
+}
+
+.dot.Crashed {
+    background-color: #bb0000;
+}
+
+.dot.Updating {
+    background-color: #8c00bb;
+}
+

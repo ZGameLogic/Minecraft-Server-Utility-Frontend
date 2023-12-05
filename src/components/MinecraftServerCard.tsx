@@ -52,9 +52,13 @@ function MinecraftServerCard(props){
             border="success"
             style={{ width: '18rem' }}
         >
-            <Card.Header>{server.name}</Card.Header>
+            <Card.Header>
+                <Card.Title>
+                    {server.name}
+                    <span className={`dot ${status}`}></span>
+                </Card.Title>
+            </Card.Header>
             <Card.Body>
-                <Card.Title>{status}</Card.Title>
                 <Stack gap={3}>
                     <Card.Text>
                         {server.playersOnline}
