@@ -5,21 +5,25 @@ import '../style/server-card.css';
 import {LinkContainer} from 'react-router-bootstrap';
 import Stomp from 'stompjs';
 import {useWebSocket} from '../hooks/WebSocketContext';
+import MinecraftPlayerLine from '../pages/MinecraftPlayerLine';
 
 function MinecraftServerCard(props){
     const {server} = props;
 
     const [status, setStatus] = useState('Unknown');
+    const [players, setPlayers] = useState([]);
+
     const webSocket:Stomp.Client = useWebSocket();
 
     useEffect(() => {
         setStatus(server.status);
+        setPlayers(server.online);
         webSocket?.subscribe(`/server/${server.name}`, (message) => {
             const body = JSON.parse(message.body);
-            if(body.server === server.name) {
-                if (body.messageType === 'status') {
-                    setStatus(body.message);
-                }
+            if (body.messageType === 'status') {
+                setStatus(body.message);
+            } else if(body.messageType === 'player'){
+                setPlayers(body.message.players);
             }
         });
 
@@ -59,11 +63,13 @@ function MinecraftServerCard(props){
                 </Card.Title>
             </Card.Header>
             <Card.Body>
-                <Stack gap={3}>
-                    <Card.Text>
-                        {server.playersOnline}
-                        {server.online}
+                <Stack gap={2}>
+                    <Card.Text className={'playerList'}>
+                        Online: {players.length}
                     </Card.Text>
+                    {players.map(player => {
+                        return <MinecraftPlayerLine key={player} player={player}/>;
+                    })}
                     <ButtonGroup>
                         <Button
                             variant="success"

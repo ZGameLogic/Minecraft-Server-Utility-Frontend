@@ -2,6 +2,10 @@
     margin: 5px;
 }
 
+.playerList{
+    margin-bottom: 0;
+}
+
 .dot {
     height: 15px;
     width: 15px;
