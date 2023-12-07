@@ -83,7 +83,7 @@ function MinecraftServerCard(props){
                         >Stop</Button>
                     </ButtonGroup>
                     <LinkContainer to={`/view/${server.name}`}>
-                        <Button variant="success">Detail View</Button>
+                        <Button variant="outline-success">Detail View</Button>
                     </LinkContainer>
                 </Stack>
             </Card.Body>

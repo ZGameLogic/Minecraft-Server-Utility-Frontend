@@ -8,17 +8,25 @@ const WebSocketContext = createContext();
 export const WebSocketProvider = ({ children }) => {
     const [webSocket, setWebSocket] = useState(null);
 
-    useEffect(() => {
+    const connectSocket = () => {
         const socket = new SockJS(`${process.env.REACT_APP_BACKEND_API_URL}/ws`);
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
             setWebSocket(stompClient);
         }, error => {
-            console.error(error);
+            console.error('STOMP error:', error);
+            setTimeout(connectSocket, 5000);  // Setting delay of 5 seconds
         });
 
+        return socket;
+    };
+
+    useEffect(() => {
+        const socket = connectSocket();
         return () => {
-            socket.close();
+            if(socket){
+                socket.close();
+            }
         };
     }, []);
 
