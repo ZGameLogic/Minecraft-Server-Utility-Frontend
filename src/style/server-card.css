@@ -13,6 +13,7 @@
     border-radius: 50%;
     display: inline-block;
 }
+
 .dot.Offline {
     background-color: #bbb;
 }

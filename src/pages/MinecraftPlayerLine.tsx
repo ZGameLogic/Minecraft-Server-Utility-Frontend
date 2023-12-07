@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Figure from 'react-bootstrap/Figure';
-import {CardText, Stack} from 'react-bootstrap';
+import {Card, Stack} from 'react-bootstrap';
 function MinecraftPlayerLine(props){
 	return <Stack direction="horizontal" gap={3}>
 		<Figure.Image
@@ -11,7 +11,7 @@ function MinecraftPlayerLine(props){
 			src={`https://mc-heads.net/avatar/${props.player}/20`}
 			className={'playerList'}
 		/>
-		<CardText>{props.player}</CardText>
+		<Card.Text>{props.player}</Card.Text>
 	</Stack>;
 }
 
