@@ -13,8 +13,7 @@ export const WebSocketProvider = ({ children }) => {
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
             setWebSocket(stompClient);
-        }, error => {
-            console.error('STOMP error:', error);
+        }, () => {
             setTimeout(connectSocket, 5000);  // Setting delay of 5 seconds
         });
 

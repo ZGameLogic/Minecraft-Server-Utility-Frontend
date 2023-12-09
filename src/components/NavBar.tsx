@@ -1,12 +1,24 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import '../style/Navbar.css';
 import {LinkContainer} from 'react-router-bootstrap';
+import {useAuth} from '../hooks/AuthContext';
+import {getUserData} from '../services/DiscordService';
 
 function NavScrollExample() {
+    const [auth,] = useAuth();
+
+    useEffect(() => {
+        getUserData(auth.access_token).then(res => {
+            console.log(res.data);
+        }).catch(er => {
+            console.error(er);
+        });
+    }, [auth]);
+
     return (
         <Navbar bg="dark" data-bs-theme="dark" sticky="top" expand="lg" className="bg-body-tertiary msu-navbar">
             <Container fluid>
