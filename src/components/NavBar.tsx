@@ -8,7 +8,7 @@ import {useAuth} from '../hooks/AuthContext';
 import {NavDropdown, Stack} from 'react-bootstrap';
 
 function NavScrollExample() {
-    const [,,user] = useAuth();
+    const [auth] = useAuth();
 
     return (
         <Navbar bg="dark" data-bs-theme="dark" sticky="top" expand="lg" className="bg-body-tertiary msu-navbar">
@@ -30,18 +30,18 @@ function NavScrollExample() {
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Collapse className="justify-content-end">
-                    {user && user.username ?
+                    {auth && auth.username ?
                         <div className="msu-user-item">
                             <Stack gap={2} direction={'horizontal'}>
                                 <img
-                                    src={`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`}
+                                    src={`https://cdn.discordapp.com/avatars/${auth.id}/${auth.avatar}.png`}
                                     width="30"
                                     height="30"
                                     className="d-inline-block align-top discord-img"
                                     alt="React Bootstrap logo"
                                 />
                                 <NavDropdown
-                                    title={user.username}
+                                    title={auth.username}
                                     id="username-nav-dropdown"
                                 >
                                     <NavDropdown.Item

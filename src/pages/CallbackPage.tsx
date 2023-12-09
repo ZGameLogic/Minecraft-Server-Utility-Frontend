@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {postForToken} from '../services/DiscordService';
+import {authenticate} from '../services/DiscordService';
 import {useNavigate, useSearchParams} from 'react-router-dom';
 import {useAuth} from '../hooks/AuthContext';
 
@@ -9,8 +9,9 @@ function CallbackPage(){
     const navigate = useNavigate();
 
     useEffect(() => {
-        postForToken(searchParams.get('code')).then((res) => {
+        authenticate(searchParams.get('code')).then((res) => {
             setAuth(res.data);
+            localStorage.setItem('refresh_token', res.data.refresh_token);
             navigate('/');
         }).catch(er => {
             console.error(er);
