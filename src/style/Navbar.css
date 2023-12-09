@@ -8,3 +8,22 @@
     margin-right: 5px;
     color: black;
 }
+
+.msu-dropdown-item {
+    margin-right: 15px;
+}
+
+.msu-login-item {
+    padding: 10px;
+}
+
+.msu-user-item {
+    margin-right: 15px;
+    padding: 10px;
+    background-image: url("/public/assets/oak.png");
+    background-size: contain;
+}
+
+.discord-img {
+    border-radius: 50%;
+}
