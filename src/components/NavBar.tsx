@@ -56,9 +56,7 @@ function NavScrollExample() {
                         </div>:
                         <Nav.Link
                             className="msu-navbar-item msu-login-item"
-                            onClick={() => {
-                                window.location.href = process.env.REACT_AUTH_URL;
-                            }}
+                            href={process.env.REACT_APP_AUTH_URL}
                         >
                             Login
                         </Nav.Link>
