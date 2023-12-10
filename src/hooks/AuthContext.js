@@ -10,12 +10,15 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if(auth === undefined) {
-            console.log('re-authenticating');
             const refreshToken = localStorage.getItem('refresh_token');
-            reauthenticate(refreshToken).then(res => {
-                setAuth(res.data);
-                localStorage.setItem('refresh_token', res.data.refresh_token);
-            }).catch(() => {});
+            if(refreshToken !== null) {
+                console.log('re-authenticating');
+                reauthenticate(refreshToken).then(res => {
+                    setAuth(res.data);
+                    localStorage.setItem('refresh_token', res.data.refresh_token);
+                }).catch(() => {
+                });
+            }
         }
     }, []);
 
