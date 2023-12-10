@@ -6,7 +6,7 @@ function LoginPage(){
         window.location.href = `${process.env.REACT_AUTH_URL}`;
     }, []);
 
-    return <></>;
+    return <>Redirecting to the login page</>;
 }
 
 export default LoginPage;
