@@ -57,7 +57,7 @@ function NavScrollExample() {
                         <Nav.Link
                             className="msu-navbar-item msu-login-item"
                             onClick={() => {
-                                window.location.href = 'https://discord.com/api/oauth2/authorize?client_id=1182184476269363230&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Flogin%2Fcallback&scope=identify+email';
+                                window.location.href = process.env.REACT_AUTH_URL;
                             }}
                         >
                             Login
