@@ -5,7 +5,6 @@ import NavBar from './components/NavBar';
 import LandingPage from './pages/LandingPage';
 import ServerDetailPage from './pages/ServerDetailPage';
 import {WebSocketProvider} from './hooks/WebSocketContext';
-import LoginPage from './pages/LoginPage';
 import CreateServerPage from './pages/CreateServerPage';
 import CallbackPage from './pages/CallbackPage';
 import {AuthProvider} from './hooks/AuthContext';
@@ -17,7 +16,6 @@ function App() {
                 <NavBar/>
                 <Routes>
                     <Route path="/" element={<LandingPage/>}/>
-                    <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/login/callback" element={<CallbackPage/>}/>
                     <Route path="/create" element={<CreateServerPage/>}/>
                     <Route path="/view/:server" element={<ServerDetailPage/>}/>
