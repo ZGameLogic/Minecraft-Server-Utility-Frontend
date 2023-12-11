@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {reauthenticate} from '../services/DiscordService';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
@@ -14,7 +15,9 @@ export const AuthProvider = ({ children }) => {
             const refreshToken = localStorage.getItem('refresh_token');
             reauthenticate(refreshToken).then(res => {
                 setAuth(res.data);
-                localStorage.setItem('refresh_token', res.data.refresh_token);
+                const {refresh_token, id} = res.data;
+                localStorage.setItem('refresh_token', refresh_token);
+                Cookies.set('user', id, {expires: 7, path: '/'});
             }).catch(() => {});
         }
     }, []);
