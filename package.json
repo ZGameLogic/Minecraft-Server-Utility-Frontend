@@ -35,6 +35,7 @@
     "start": "env-cmd -f .env.local react-scripts start",
     "lint": "npx eslint src",
     "build": "env-cmd -f .env.production react-scripts build",
+    "build-cert": "env-cmd -f .env.cert react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

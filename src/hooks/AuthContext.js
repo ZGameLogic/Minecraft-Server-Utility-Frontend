@@ -11,14 +11,16 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if(auth === undefined) {
-            console.log('re-authenticating');
             const refreshToken = localStorage.getItem('refresh_token');
-            reauthenticate(refreshToken).then(res => {
-                setAuth(res.data);
-                const {refresh_token, id} = res.data;
-                localStorage.setItem('refresh_token', refresh_token);
-                Cookies.set('user', id, {expires: 7, path: '/'});
-            }).catch(() => {});
+            if(refreshToken !== null) {
+                console.log('re-authenticating');
+                reauthenticate(refreshToken).then(res => {
+                    setAuth(res.data);
+                    const {refresh_token, id} = res.data;
+                    localStorage.setItem('refresh_token', refresh_token);
+                    Cookies.set('user', id, {expires: 7, path: '/'});
+                }).catch(() => {});
+            }
         }
     }, []);
 
