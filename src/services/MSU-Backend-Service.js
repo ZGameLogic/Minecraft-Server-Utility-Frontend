@@ -1,34 +1,38 @@
 import axios from 'axios';
 
 function fetchServers(){
-    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/servers`,{withCredentials: true});
+    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/servers`);
 }
 
 function fetchServer(server){
     return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/servers/${server}`,{withCredentials: true});
 }
 
-function fetchServerLog(server){
-    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/server/log/${server}`,{withCredentials: true});
+function fetchServerLog(server, uid){
+    const headers = {user: uid};
+    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/server/log/${server}`,{headers});
 }
 
-function fetchServerVersions(){
-    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/server/versions`,{withCredentials: true});
+function fetchServerVersions(uid){
+    const headers = {user: uid};
+    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/server/versions`,{headers});
 }
 
-function validateServerCreation(data){
+function validateServerCreation(data, uid){
+    const headers = {user: uid};
     return axios.post(
         `${process.env.REACT_APP_BACKEND_API_URL}/server/create/check`,
         data,
-        {withCredentials: true}
+        {headers}
     );
 }
 
-function createServer(data){
+function createServer(data, uid){
+    const headers = {user: uid};
     return axios.post(
         `${process.env.REACT_APP_BACKEND_API_URL}/server/create`,
         data,
-        {withCredentials: true}
+        {headers}
     );
 }
 

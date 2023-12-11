@@ -21,7 +21,7 @@ function ServerDetailPage() {
         fetchServer(server).then((res) => {
             const {status} = res.data[0] ?? 'Unknown';
             setStatus(status);
-            fetchServerLog(server).then((res) => {
+            fetchServerLog(server, auth.id).then((res) => {
                 const log = res.data[server].log ?? '';
                 log.split('\r\n').map(addToLog);
             }).catch((err) => {

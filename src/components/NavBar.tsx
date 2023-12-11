@@ -6,7 +6,6 @@ import '../style/Navbar.css';
 import {LinkContainer} from 'react-router-bootstrap';
 import {useAuth} from '../hooks/AuthContext';
 import {NavDropdown, Stack} from 'react-bootstrap';
-import Cookies from 'js-cookie';
 
 function NavScrollExample() {
     const [auth, setAuth, hasPermission] = useAuth();
@@ -56,7 +55,6 @@ function NavScrollExample() {
                                         onClick={() => {
                                             setAuth(undefined);
                                             localStorage.removeItem('refresh_token');
-                                            Cookies.remove('user');
                                         }}
                                         className="msu-dropdown-item"
                                     >
