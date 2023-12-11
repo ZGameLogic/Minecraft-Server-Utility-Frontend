@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import {createServer, fetchServerVersions, validateServerCreation} from '../services/MSU-Backend-Service';
-import {Button, Card, Col, Placeholder, Row, Toast, ToastContainer} from 'react-bootstrap';
+import {Button, Card, Col, Placeholder, Row} from 'react-bootstrap';
 import * as yup from 'yup';
 import {Formik} from 'formik';
 import {useNavigate} from 'react-router-dom';
@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import '../style/create-server.css';
 import Stomp from 'stompjs';
 import {useWebSocket} from '../hooks/WebSocketContext';
+import {useToast} from '../hooks/ToastContext';
 
 function CreateServerForm() {
     const navigate = useNavigate();
@@ -20,7 +21,8 @@ function CreateServerForm() {
 
     const [serverValidationLoading, setServerValidationLoading] = useState(false);
     const [serverValid, setServerValid] = useState(false);
-    const [showError, setShowError] = useState(false);
+
+    const addToast = useToast();
 
     const webSocket:Stomp.Client = useWebSocket();
 
@@ -33,7 +35,11 @@ function CreateServerForm() {
             setSelectedCategoryVersions(data[cat].sort(sortMCVersion));
             setApiDataLoaded(true);
         }, (error) => {
-            setShowError(true);
+            addToast({
+                title: 'Error loading some key information',
+                description: 'Unable to load server categories and versions',
+                type: 'danger'
+            });
             console.error(error);
         });
     }, []);
@@ -91,10 +97,6 @@ function CreateServerForm() {
         });
     }
 
-    function clearError(){
-        setShowError(false);
-    }
-
     const schema = yup.object().shape({
         name: yup.string().required('Server name is required'),
         port: yup.number()
@@ -105,14 +107,6 @@ function CreateServerForm() {
     });
 
     return <>
-        <ToastContainer position={'top-center'} className='fetchToastError'>
-            <Toast show={showError} onClose={clearError} animation={true} bg={'danger'} >
-                <Toast.Header>
-                    <strong className="me-auto">Error loading some key information</strong>
-                </Toast.Header>
-                <Toast.Body>Unable to load server categories and versions</Toast.Body>
-            </Toast>
-        </ToastContainer>
         <Container className='createServerFormContainer'>
             <Card border='secondary' style={{ width: '50rem' }}>
                 <Card.Body>

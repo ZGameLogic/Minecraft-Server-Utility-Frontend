@@ -1,12 +1,17 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {reauthenticate} from '../services/DiscordService';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(undefined);
-    const [permissions, setPermissions] = useState({});
+
+    function hasPermission(server, permission){
+        if(auth === undefined) return false;
+        return auth.permissions[server].includes(permission);
+    }
 
     useEffect(() => {
         if(auth === undefined) {
@@ -15,15 +20,16 @@ export const AuthProvider = ({ children }) => {
                 console.log('re-authenticating');
                 reauthenticate(refreshToken).then(res => {
                     setAuth(res.data);
-                    localStorage.setItem('refresh_token', res.data.refresh_token);
-                }).catch(() => {
-                });
+                    const {refresh_token, id} = res.data;
+                    localStorage.setItem('refresh_token', refresh_token);
+                    Cookies.set('user', id, {expires: 7, path: '/'});
+                }).catch(() => {});
             }
         }
     }, []);
 
     return (
-        <AuthContext.Provider value={[auth, setAuth, permissions, setPermissions]}>
+        <AuthContext.Provider value={[auth, setAuth, hasPermission]}>
             {children}
         </AuthContext.Provider>
     );

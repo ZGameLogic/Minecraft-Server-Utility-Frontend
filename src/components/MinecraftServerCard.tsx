@@ -5,13 +5,15 @@ import '../style/server-card.css';
 import {LinkContainer} from 'react-router-bootstrap';
 import Stomp from 'stompjs';
 import {useWebSocket} from '../hooks/WebSocketContext';
-import MinecraftPlayerLine from '../pages/MinecraftPlayerLine';
+import MinecraftPlayerLine from '../components/MinecraftPlayerLine';
+import {useAuth} from '../hooks/AuthContext';
 
 function MinecraftServerCard(props){
     const {server} = props;
 
     const [status, setStatus] = useState('Unknown');
     const [players, setPlayers] = useState([]);
+    const [auth,,hasPermission] = useAuth();
 
     const webSocket:Stomp.Client = useWebSocket();
 
@@ -33,7 +35,7 @@ function MinecraftServerCard(props){
     }, [webSocket]);
 
     function sendMessage(message: object){
-        webSocket?.send(`/app/server/${server.name}`, {}, JSON.stringify(message));
+        webSocket?.send(`/app/server/${server.name}`, {}, JSON.stringify({...message, userId: auth.id}));
     }
 
     function stopServer(){
@@ -70,21 +72,25 @@ function MinecraftServerCard(props){
                     {players.map(player => {
                         return <MinecraftPlayerLine key={player} player={player}/>;
                     })}
-                    <ButtonGroup>
-                        <Button
-                            variant="success"
-                            onClick={startServer}
-                            disabled={status !== 'Offline' && status !== 'Crashed'}
-                        >Start</Button>
-                        <Button
-                            variant="danger"
-                            onClick={stopServer}
-                            disabled={status !== 'Online'}
-                        >Stop</Button>
-                    </ButtonGroup>
-                    <LinkContainer to={`/view/${server.name}`}>
-                        <Button variant="outline-success">Detail View</Button>
-                    </LinkContainer>
+                    {hasPermission(server.name, 's') &&
+                        <ButtonGroup>
+                            <Button
+                                variant="success"
+                                onClick={startServer}
+                                disabled={status !== 'Offline' && status !== 'Crashed'}
+                            >Start</Button>
+                            <Button
+                                variant="danger"
+                                onClick={stopServer}
+                                disabled={status !== 'Online'}
+                            >Stop</Button>
+                        </ButtonGroup>
+                    }
+                    {hasPermission(server.name, 'c') &&
+                        <LinkContainer to={`/view/${server.name}`}>
+                            <Button variant="outline-success">Detail View</Button>
+                        </LinkContainer>
+                    }
                 </Stack>
             </Card.Body>
         </Card>
