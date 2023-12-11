@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
     function hasPermission(server, permission){
         if(auth === undefined) return false;
-        return auth.permissions[server].includes(permission);
+        return !!auth?.permissions[server]?.includes(permission);
     }
 
     useEffect(() => {
