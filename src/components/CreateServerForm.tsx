@@ -10,6 +10,7 @@ import '../style/create-server.css';
 import Stomp from 'stompjs';
 import {useWebSocket} from '../hooks/WebSocketContext';
 import {useToast} from '../hooks/ToastContext';
+import {useAuth} from '../hooks/AuthContext';
 
 function CreateServerForm() {
     const navigate = useNavigate();
@@ -22,12 +23,12 @@ function CreateServerForm() {
     const [serverValidationLoading, setServerValidationLoading] = useState(false);
     const [serverValid, setServerValid] = useState(false);
 
+    const [auth] = useAuth();
     const addToast = useToast();
-
     const webSocket:Stomp.Client = useWebSocket();
 
     useEffect(() => {
-        fetchServerVersions().then(res => {
+        if(auth !== undefined) fetchServerVersions(auth.id).then(res => {
             const {data} = res;
             const cat = 'vanilla';
 
@@ -42,7 +43,7 @@ function CreateServerForm() {
             });
             console.error(error);
         });
-    }, []);
+    }, [auth]);
 
     function sortMCVersion(a: string, b: string){
         const aSplit = a.split('.');
@@ -73,10 +74,10 @@ function CreateServerForm() {
     function submitForm(values, {setErrors}){
         setServerValid(false);
         setServerValidationLoading(true);
-        validateServerCreation(values).then(() => {
+        validateServerCreation(values, auth.id).then(() => {
             setServerValid(true);
             setServerValidationLoading(false);
-            createServer(values).then(()=> {
+            createServer(values, auth.id).then(()=> {
                 webSocket?.subscribe(`/server/${values.name}`, (message) => {
                     const body = JSON.parse(message.body);
                     if(body.server === values.name) {
