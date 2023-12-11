@@ -5,6 +5,7 @@ import {fetchServer, fetchServerLog} from '../services/MSU-Backend-Service';
 import {useWebSocket} from '../hooks/WebSocketContext';
 import Stomp from 'stompjs';
 import Container from 'react-bootstrap/Container';
+import {useAuth} from '../hooks/AuthContext';
 
 function ServerDetailPage() {
     const {server} = useParams();
@@ -14,6 +15,7 @@ function ServerDetailPage() {
     const [autoScroll, setAutoScroll] = useState(true);
     const stompClient:Stomp.Client = useWebSocket();
     const containerRef = useRef();
+    const [auth] = useAuth();
 
     useEffect(() => {
         fetchServer(server).then((res) => {
@@ -59,7 +61,7 @@ function ServerDetailPage() {
     }, [log, autoScroll]);
 
     function sendMessage(message: object){
-        stompClient?.send(`/app/server/${server}`, {}, JSON.stringify(message));
+        stompClient?.send(`/app/server/${server}`, {}, JSON.stringify({...message, userId: auth.id}));
     }
 
     function stopServer(){

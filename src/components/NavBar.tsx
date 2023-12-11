@@ -6,9 +6,10 @@ import '../style/Navbar.css';
 import {LinkContainer} from 'react-router-bootstrap';
 import {useAuth} from '../hooks/AuthContext';
 import {NavDropdown, Stack} from 'react-bootstrap';
+import Cookies from 'js-cookie';
 
 function NavScrollExample() {
-    const [auth] = useAuth();
+    const [auth, setAuth, hasPermission] = useAuth();
 
     return (
         <Navbar bg="dark" data-bs-theme="dark" sticky="top" expand="lg" className="bg-body-tertiary msu-navbar">
@@ -24,9 +25,16 @@ function NavScrollExample() {
                         <LinkContainer to='/'>
                             <Nav.Link className="msu-navbar-item">Home</Nav.Link>
                         </LinkContainer>
-                        <LinkContainer to='/create'>
-                            <Nav.Link className="msu-navbar-item">Create Server</Nav.Link>
-                        </LinkContainer>
+                        {hasPermission('General Permissions', 'C') &&
+                            <LinkContainer to='/create'>
+                                <Nav.Link className="msu-navbar-item">Create Server</Nav.Link>
+                            </LinkContainer>
+                        }
+                        {hasPermission('General Permissions', 'U') &&
+                            <LinkContainer to='/users'>
+                                <Nav.Link className="msu-navbar-item">User Management</Nav.Link>
+                            </LinkContainer>
+                        }
                     </Nav>
                 </Navbar.Collapse>
                 <Navbar.Collapse className="justify-content-end">
@@ -45,8 +53,11 @@ function NavScrollExample() {
                                     id="username-nav-dropdown"
                                 >
                                     <NavDropdown.Item
-                                        onClick={() => console.log('logout')}
-                                        disabled={true}
+                                        onClick={() => {
+                                            setAuth(undefined);
+                                            localStorage.removeItem('refresh_token');
+                                            Cookies.remove('user');
+                                        }}
                                         className="msu-dropdown-item"
                                     >
                                         Logout

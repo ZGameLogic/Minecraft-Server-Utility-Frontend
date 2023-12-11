@@ -7,7 +7,11 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [auth, setAuth] = useState(undefined);
-    const [permissions, setPermissions] = useState({});
+
+    function hasPermission(server, permission){
+        if(auth === undefined) return false;
+        return auth.permissions[server].includes(permission);
+    }
 
     useEffect(() => {
         if(auth === undefined) {
@@ -25,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={[auth, setAuth, permissions, setPermissions]}>
+        <AuthContext.Provider value={[auth, setAuth, hasPermission]}>
             {children}
         </AuthContext.Provider>
     );
