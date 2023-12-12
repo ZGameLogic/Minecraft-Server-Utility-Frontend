@@ -54,7 +54,7 @@ function NavScrollExample() {
                                     <NavDropdown.Item
                                         onClick={() => {
                                             setAuth(undefined);
-                                            localStorage.removeItem('refresh_token');
+                                            localStorage.removeItem('id');
                                         }}
                                         className="msu-dropdown-item"
                                     >
