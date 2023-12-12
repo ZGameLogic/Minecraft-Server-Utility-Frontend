@@ -22,7 +22,7 @@ function ServerDetailPage() {
             const {status} = res.data[0] ?? 'Unknown';
             setStatus(status);
             fetchServerLog(server, auth.id).then((res) => {
-                const log = res.data[server].log ?? '';
+                const log = res.data.log;
                 log.split('\r\n').map(addToLog);
             }).catch((err) => {
                 console.log(err);
@@ -30,16 +30,13 @@ function ServerDetailPage() {
         }).catch((err) => {
             console.log(err);
         });
-    }, []);
+    }, [auth]);
 
     useEffect(() => {
         stompClient?.subscribe(`/server/${server}`, (message) => {
             const body = JSON.parse(message.body);
             if(body.messageType === 'status'){
                 setStatus(body.message);
-                if(body.message === 'Starting'){
-                    setLog([]);
-                }
             } else if(body.messageType === 'log') {
                 addToLog(body.message);
             } else {
