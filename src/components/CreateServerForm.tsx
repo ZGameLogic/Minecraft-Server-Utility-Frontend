@@ -17,9 +17,7 @@ function CreateServerForm() {
 
     const [serverVersionsApiData, setServerVersionsApiData] = useState({});
     const [selectedCategoryVersions, setSelectedCategoryVersions] = useState([]);
-
     const [apiDataLoaded, setApiDataLoaded] = useState(false);
-
     const [serverValidationLoading, setServerValidationLoading] = useState(false);
     const [serverValid, setServerValid] = useState(false);
 

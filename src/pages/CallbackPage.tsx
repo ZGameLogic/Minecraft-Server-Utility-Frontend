@@ -11,7 +11,7 @@ function CallbackPage(){
     useEffect(() => {
         authenticate(searchParams.get('code')).then((res) => {
             setAuth(res.data);
-            localStorage.setItem('refresh_token', res.data.refresh_token);
+            localStorage.setItem('id', res.data.id);
             navigate('/');
         }).catch(er => {
             console.error(er);
