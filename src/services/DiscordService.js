@@ -7,9 +7,9 @@ function authenticate(code){
     return axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/auth/login`, params);
 }
 
-function reauthenticate(token){
+function reauthenticate(id){
     const params = new URLSearchParams({
-        token
+        id
     });
     return axios.post(`${process.env.REACT_APP_BACKEND_API_URL}/auth/login`, params);
 }

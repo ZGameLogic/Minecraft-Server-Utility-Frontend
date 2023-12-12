@@ -15,13 +15,13 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if(auth === undefined) {
-            const refreshToken = localStorage.getItem('refresh_token');
-            if(refreshToken !== null) {
+            const id = localStorage.getItem('id');
+            if(id !== null) {
                 console.log('re-authenticating');
-                reauthenticate(refreshToken).then(res => {
+                reauthenticate(id).then(res => {
                     setAuth(res.data);
-                    const {refresh_token} = res.data;
-                    localStorage.setItem('refresh_token', refresh_token);
+                    const {id} = res.data;
+                    localStorage.setItem('id', id);
                 }).catch(() => {});
             }
         }
