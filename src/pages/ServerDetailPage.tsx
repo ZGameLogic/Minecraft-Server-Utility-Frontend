@@ -14,12 +14,14 @@ function ServerDetailPage() {
 
     const [status, setStatus] = useState('Unknown');
     const [log, setLog] = useState([]);
+    const [chatLog, setChatLog] = useState([]);
     const [command, setCommand] = useState('');
-    const [chat, setChat] = useState('');
+    const [chatMessage, setChatMessage] = useState('');
     const [autoScroll, setAutoScroll] = useState(true);
     const [autoScrollChat, setAutoScrollChat] = useState(true);
     const stompClient:Stomp.Client = useWebSocket();
-    const containerRef = useRef();
+    const logContainerRef = useRef();
+    const chatLogContainerRef = useRef();
     const [auth] = useAuth();
 
     useEffect(() => {
@@ -55,22 +57,31 @@ function ServerDetailPage() {
     }, [stompClient]);
 
     useEffect(() => {
-        if (autoScroll && containerRef.current) {
+        if (autoScroll && logContainerRef.current) {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+            logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
         }
     }, [log, autoScroll]);
+
+    useEffect(() => {
+        if (autoScrollChat && chatLogContainerRef.current) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            chatLogContainerRef.current.scrollTop = chatLogContainerRef.current.scrollHeight;
+        }
+    }, [chatLog, autoScrollChat]);
 
     function sendChatMessage(event) {
         event.preventDefault();
         sendMessage({
             action: 'command',
             data: {
-                'command': `tellraw @a ["",{"text":"<"},{"text":"${auth.username}","color":"dark_purple"},{"text":"> ${chat}"}]`
+                'command': `tellraw @a ["",{"text":"<"},{"text":"${auth.username}","color":"dark_purple"},{"text":"> ${chatMessage}"}]`
             }
         });
-        setChat('');
+        addToChat(`<MSU_${auth.username}> ${chatMessage}`);
+        setChatMessage('');
     }
 
     function sendConsoleCommand(event){
@@ -102,6 +113,15 @@ function ServerDetailPage() {
     
     function addToLog(message: string){
         setLog((prevState) => {
+            return [...prevState, message];
+        });
+        if(message.includes(']: <')){
+            addToChat(message);
+        }
+    }
+
+    function addToChat(message: string) {
+        setChatLog((prevState) => {
             return [...prevState, message];
         });
     }
@@ -140,9 +160,10 @@ function ServerDetailPage() {
                                 </ListGroup.Item>
                             </ListGroup>
                             <div
-                                ref={containerRef}
+                                ref={logContainerRef}
                                 style={{
-                                    maxHeight: '400px', // Set your desired maximum height here
+                                    maxHeight: '400px',
+                                    minHeight: '400px',
                                     overflowY: 'auto',
                                     border: '1px solid #ccc',
                                     padding: '10px',
@@ -186,14 +207,15 @@ function ServerDetailPage() {
                                 </ListGroup.Item>
                             </ListGroup>
                             <div
-                                ref={containerRef}
+                                ref={chatLogContainerRef}
                                 style={{
-                                    maxHeight: '400px', // Set your desired maximum height here
+                                    maxHeight: '400px',
+                                    minHeight: '400px',
                                     overflowY: 'auto',
                                     border: '1px solid #ccc',
                                     padding: '10px',
                                 }}>
-                                {log.map((message, index) => (
+                                {chatLog.map((message, index) => (
                                     <div key={index}>{message}</div>
                                 ))}
                             </div>
@@ -202,8 +224,8 @@ function ServerDetailPage() {
                                     <Form.Group controlId="formChat" as={Col}>
                                         <Form.Control
                                             type="text"
-                                            value={chat}
-                                            onChange={(event) => setChat(event.target.value)}
+                                            value={chatMessage}
+                                            onChange={(event) => setChatMessage(event.target.value)}
                                             disabled={status !== 'Online'}
                                         />
                                     </Form.Group>
