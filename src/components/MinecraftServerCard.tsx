@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import {Button, ButtonGroup, Card, Stack} from 'react-bootstrap';
 import '../style/server-card.css';
 import {LinkContainer} from 'react-router-bootstrap';
@@ -7,8 +6,9 @@ import Stomp from 'stompjs';
 import {useWebSocket} from '../hooks/WebSocketContext';
 import MinecraftPlayerLine from '../components/MinecraftPlayerLine';
 import {useAuth} from '../hooks/AuthContext';
+import {ServerCardProps} from '../constants/Types';
 
-function MinecraftServerCard(props){
+function MinecraftServerCard(props: ServerCardProps){
     const {server} = props;
 
     const [status, setStatus] = useState('Unknown');
@@ -97,14 +97,5 @@ function MinecraftServerCard(props){
         <br />
     </>;
 }
-
-MinecraftServerCard.propTypes = {
-    server: PropTypes.shape({
-        name: PropTypes.string,
-        status: PropTypes.string,
-        online: PropTypes.arrayOf(PropTypes.string),
-        playersOnline: PropTypes.number
-    })
-};
 
 export default MinecraftServerCard;

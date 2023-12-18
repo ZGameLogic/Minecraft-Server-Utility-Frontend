@@ -1,8 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Figure from 'react-bootstrap/Figure';
 import {Card, Stack} from 'react-bootstrap';
-function MinecraftPlayerLine(props){
+import {PlayerLineProps} from '../constants/Types';
+
+function MinecraftPlayerLine(props: PlayerLineProps){
 	return <Stack direction="horizontal" gap={3}>
 		<Figure.Image
 			width={20}
@@ -14,9 +15,5 @@ function MinecraftPlayerLine(props){
 		<Card.Text>{props.player}</Card.Text>
 	</Stack>;
 }
-
-MinecraftPlayerLine.propTypes = {
-	player: PropTypes.string
-};
 
 export default MinecraftPlayerLine;
