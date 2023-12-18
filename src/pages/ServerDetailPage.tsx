@@ -1,6 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {useParams} from 'react-router-dom';
-import {Button, Card, Col, InputGroup, ListGroup, Row, Tab, Tabs} from 'react-bootstrap';
+import {Button, ButtonGroup, Card, Col, InputGroup, ListGroup, Row, Stack, Tab, Tabs} from 'react-bootstrap';
 import {fetchServer, fetchServerLog} from '../services/MSU-Backend-Service';
 import {useWebSocket} from '../hooks/WebSocketContext';
 import Stomp from 'stompjs';
@@ -8,11 +8,13 @@ import Container from 'react-bootstrap/Container';
 import {useAuth} from '../hooks/AuthContext';
 import '../style/server-detail.css';
 import Form from 'react-bootstrap/Form';
+import MinecraftPlayerLine from '../components/MinecraftPlayerLine';
+import {MinecraftServer} from '../constants/Types';
 
 function ServerDetailPage() {
     const {server} = useParams();
 
-    const [status, setStatus] = useState('Unknown');
+    const [serverData, setServerData] = useState<MinecraftServer>(null);
     const [log, setLog] = useState([]);
     const [chatLog, setChatLog] = useState([]);
     const [command, setCommand] = useState('');
@@ -22,12 +24,11 @@ function ServerDetailPage() {
     const stompClient:Stomp.Client = useWebSocket();
     const logContainerRef = useRef();
     const chatLogContainerRef = useRef();
-    const [auth] = useAuth();
+    const [auth,, hasPermission] = useAuth();
 
     useEffect(() => {
         fetchServer(server).then((res) => {
-            const {status} = res.data[0] ?? 'Unknown';
-            setStatus(status);
+            setServerData(res.data);
             fetchServerLog(server, auth.id).then((res) => {
                 const log = res.data.log;
                 log.split('\r\n').map(addToLog);
@@ -43,7 +44,7 @@ function ServerDetailPage() {
         stompClient?.subscribe(`/server/${server}`, (message) => {
             const body = JSON.parse(message.body);
             if(body.messageType === 'status'){
-                setStatus(body.message);
+                setServerData({...serverData, status: body.message});
             } else if(body.messageType === 'log') {
                 addToLog(body.message);
             } else {
@@ -127,9 +128,44 @@ function ServerDetailPage() {
     }
 
     return <>
-        <p>{server} {status} </p>
-        <button onClick={stopServer}>Stop Server</button>
-        <button onClick={startServer}>Start Server</button>
+        <Card
+            className="text-center msu-server-card"
+            bg="dark"
+            text="white"
+            border="success"
+            style={{ width: '18rem' }}
+        >
+            <Card.Header>
+                <Card.Title>
+                    {serverData?.name}
+                    <span className={`dot ${serverData?.status}`}></span>
+                </Card.Title>
+            </Card.Header>
+            <Card.Body>
+                <Stack gap={2}>
+                    <Card.Text className={'playerList'}>
+                        Online: {serverData?.online?.length}
+                    </Card.Text>
+                    {serverData?.online?.map(player => {
+                        return <MinecraftPlayerLine key={player} player={player}/>;
+                    })}
+                    {hasPermission(serverData.name, 'c') &&
+                        <ButtonGroup>
+                            <Button
+                                variant="success"
+                                onClick={startServer}
+                                disabled={serverData?.status !== 'Offline' && serverData?.status !== 'Crashed'}
+                            >Start</Button>
+                            <Button
+                                variant="danger"
+                                onClick={stopServer}
+                                disabled={serverData?.status !== 'Online'}
+                            >Stop</Button>
+                        </ButtonGroup>
+                    }
+                </Stack>
+            </Card.Body>
+        </Card>
         <Container className="log-container">
             <Card
                 bg="dark"
@@ -179,14 +215,14 @@ function ServerDetailPage() {
                                             type="text"
                                             value={command}
                                             onChange={(event) => setCommand(event.target.value)}
-                                            disabled={status !== 'Online'}
+                                            disabled={serverData?.status !== 'Online'}
                                         />
                                     </Form.Group>
                                     <Col xs="auto">
                                         <Button
                                             variant="outline-success"
                                             type="submit"
-                                            disabled={status !== 'Online'}
+                                            disabled={serverData?.status !== 'Online'}
                                         >
                                             Submit
                                         </Button>
@@ -226,14 +262,14 @@ function ServerDetailPage() {
                                             type="text"
                                             value={chatMessage}
                                             onChange={(event) => setChatMessage(event.target.value)}
-                                            disabled={status !== 'Online'}
+                                            disabled={serverData?.status !== 'Online'}
                                         />
                                     </Form.Group>
                                     <Col xs="auto">
                                         <Button
                                             variant="outline-success"
                                             type="submit"
-                                            disabled={status !== 'Online'}
+                                            disabled={serverData?.status !== 'Online'}
                                         >
                                             Submit
                                         </Button>
