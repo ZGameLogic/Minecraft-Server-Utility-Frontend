@@ -1,13 +1,14 @@
 import React, {createContext, useContext, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import {reauthenticate} from '../services/DiscordService';
+import {User, AuthContextType} from '../constants/Types';
 
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextType>(undefined);
 
 export const AuthProvider = ({ children }) => {
-    const [auth, setAuth] = useState(undefined);
+    const [auth, setAuth] = useState<User>(undefined);
 
-    function hasPermission(server, permission){
+    function hasPermission(server: string, permission: string){
         if(auth === undefined) return false;
         if(auth.permissions['General Permissions']?.includes('A')) return true;
         return !!auth.permissions[server]?.includes(permission);

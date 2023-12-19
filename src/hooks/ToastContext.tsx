@@ -2,6 +2,7 @@ import React, {createContext, useContext, useState} from 'react';
 import PropTypes from 'prop-types';
 import {ToastContainer} from 'react-bootstrap';
 import ToastMessage from '../components/ToastMessage';
+import {ToastType} from '../constants/Types';
 
 const ToastContext = createContext(undefined);
 
@@ -9,7 +10,7 @@ export const ToastProvider = ({ children }) => {
 
     const [toasts, setToasts] = useState([]);
 
-    function addToast(toast){
+    function addToast(toast: ToastType){
         setToasts((prevState) => {
             return [...prevState, toast];
         });
