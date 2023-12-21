@@ -149,7 +149,7 @@ function ServerDetailPage() {
                     {serverData?.online?.map(player => {
                         return <MinecraftPlayerLine key={player} player={player}/>;
                     })}
-                    {hasPermission(serverData.name, 'c') &&
+                    {hasPermission(serverData?.name, 'c') &&
                         <ButtonGroup>
                             <Button
                                 variant="success"
