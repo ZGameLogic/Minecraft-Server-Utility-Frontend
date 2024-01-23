@@ -1,26 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {fetchServers} from '../services/MSU-Backend-Service';
 import MinecraftServerCard from '../components/MinecraftServerCard';
 import Container from 'react-bootstrap/Container';
 import {Row} from 'react-bootstrap';
 import {MinecraftServer} from '../constants/Types';
+import {useQuery} from 'react-query';
 
 function LandingPage() {
 
-    const [mcServers, setMcServers] = useState<MinecraftServer[]>([]);
+    const {isLoading, data} = useQuery(['servers'], fetchServers);
 
-    useEffect(() => {
-        fetchServers().then((res) => {
-            setMcServers(res.data);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }, []);
+    if(isLoading) return <></>;
 
     return <>
         <Container>
             <Row>
-                {mcServers.map((server: MinecraftServer) => {
+                {data && data.map((server: MinecraftServer) => {
                     return <MinecraftServerCard key={server.name} server={server}/>;
                 })}
             </Row>
