@@ -1,8 +1,9 @@
 import axios from 'axios';
-import {PermissionType} from '../constants/Types';
+import {MinecraftServer, PermissionType} from '../constants/Types';
 
-function fetchServers(){
-    return axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/servers`);
+async function fetchServers(): Promise<MinecraftServer[]> {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_API_URL}/servers`);
+    return response.data;
 }
 
 function fetchServer(server: string){
